@@ -1,5 +1,5 @@
-[Warzone Game] - Team Project 
+[Warzone Game] - Team Project, Assignment 1 
 
 COMP 345 : Advanced Program Design
-Assignment 1
+
 Dominic Hart 40068282
