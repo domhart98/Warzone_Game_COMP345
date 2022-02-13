@@ -43,7 +43,7 @@ ostream& operator<<(ostream& out, const Continent& c) {
     for (Territory* t : c.territories) {
         territories += " " + t->name;
     }
-    out << "Continent Name: " << c.name << " | Bonus Points: " << c.bonusPts << " | Territories: " << territories;
+    out << "Continent Name: " << c.name << " | Bonus Points: " << c.bonusPts << " | Territories: [" << territories << "]";
     return out;
 }
 
@@ -90,7 +90,7 @@ Territory::~Territory() {
 }
 
 ostream& operator<<(ostream& out, const Territory& t) {
-    out << "Territory Name: " << t.name << " | Territory Number : " << t.territoryNumber << " | Armies : " << t.armyNumber << endl;
+    out << "Territory Number : " << t.territoryNumber << " | Territory Name: " << t.name << " | Armies : " << t.armyNumber;
     return out;
 }
 //-------------------------------EDGE--------------------------------------------------
@@ -205,11 +205,11 @@ Map& Map::operator=(const Map& m) {
 ostream& operator<<(ostream& out, const Map& m) {
     out << "[Continents]" << endl;
     for (Continent* c : m.continents) {
-        out << "Name: " << c->name << "    Bonus Points: " << c->bonusPts << endl;
+        out << *c << endl;
     }
     out << "[Territories]" << endl;
     for (Territory* t : m.territories) {
-        out << "Name: " << t->name << "   Territory #: " << t->territoryNumber << "   Armies: " << t->armyNumber << endl;
+        out << *t << endl;
     }
     out << "[Borders]" << endl;
     for (Territory* t : m.territories) {
@@ -252,6 +252,11 @@ bool Map::validate() {
     else {
         mapConnected = false;
     }
+
+    //Check if each territory belongs to only one continent. In this case, a territory can only be added to one Continent so we 
+    //know that each territory belongs to one continent already.
+    territoryHasOneContinent = true;
+
     
     //Check if each continent on the map is also connnected. For each continent, perform DFS.
     for (const Continent* c : this->continents) {
@@ -272,15 +277,17 @@ bool Map::validate() {
         }
     }
 
-    //Check if each territory belongs to only one continent.
     
-
     
-
-    //2) continents are connected subgraphs
-    
-     
-    //3) each country belongs to one and only one continent.
+    //If all conditions are true, return true. Otherwise, return false
+    if (mapConnected && continentsConnected && territoryHasOneContinent) {
+        cout << "Map is valid." << endl;
+        return true;
+    }
+    else {
+        cout << "Map is not valid." << endl;
+        return false;
+    }
 
 }
 
@@ -408,15 +415,4 @@ Map* MapLoader::loadMap(std::string& filename) {
         e->start->adjacentTerritories.push_back(e->stop);
     }
     return map;
-}
-
-
-
-int main(){
-    MapLoader* ml = new MapLoader();
-    Map* map = new Map();
-    string filename = "europe.map";
-    map = ml->loadMap(filename);
-    cout << *map;
-    cout << map->validate();
 }
