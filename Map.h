@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
-//#include "Player.h"
+#include "Player.h"
 using namespace std;
 
 
@@ -17,7 +17,7 @@ public:
     int territoryNumber;
     int armyNumber;
     vector<Territory*> adjacentTerritories;
-    //Player* owner;
+    Player* owner;
 
     Territory();
     Territory(string name, int territoryNum, int armyNum);
@@ -61,26 +61,14 @@ public:
     vector<Edge*> edges;
 
     Map();
-    ~Map();
     Map(const Map& m);
     Map& operator=(const Map& m);
-    void deepCopy(const Map& m);
     friend ostream& operator<<(ostream& out, const Map& m);
+    ~Map();
 
-    vector<pair<Territory*, bool>>* getNeighbourList(Territory* t);
-    void addTerritory(Territory* t, bool setStartingTerritory = false);
-    void addContinent(Continent* continent);
-    Continent* findContinent(Continent continent);
     Territory* findTerritory(int territoryNum);
-    void addPath(Territory* start, Territory* stop, bool land);
-    void displayMap();
     void searchGraph(unordered_set<string>& names, const Territory* territory);
     void searchSubGraph(unordered_set<string>& nameset, const Continent* continent, const Territory* territory);
-    bool isValid();
-    int isAdjacent(Territory* start, Territory* stop);
-    bool areTerritoriesConnected();
-    bool areContinentsConnected();
-    bool eachRegionBelongsToOneContinent();
     bool validate();
 };
 
@@ -95,3 +83,4 @@ public:
     friend ostream& operator<<(ostream& out, const MapLoader& ml);
     Map* loadMap(std::string& file);
 };
+
